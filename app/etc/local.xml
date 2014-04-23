@@ -23,16 +23,15 @@
  * @package    Mage_Core
  * @copyright  Copyright (c) 2008 Irubin Consulting Inc. DBA Varien (http://www.varien.com)
  * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
- * ISM ecompany
  */
 -->
 <config>
     <global>
         <install>
-            <date><![CDATA[Mon, 07 Apr 2014 11:15:46 +0000]]></date>
+            <date><![CDATA[Fri, 18 Apr 2014 06:50:21 +0000]]></date>
         </install>
         <crypt>
-            <key><![CDATA[10f01a34ad2a07aab70a6faf8cf96cc4]]></key>
+            <key><![CDATA[0df65a0241b68c67edd53a6f38d2041c]]></key>
         </crypt>
         <disable_local_modules>false</disable_local_modules>
         <resources>
@@ -42,11 +41,7 @@
             <default_setup>
                 <connection>
                     <host><![CDATA[localhost]]></host>
-                /includes
-/media
-/var
-/robots.txt
-/errors/local.xml    <username><![CDATA[root]]></username>
+                    <username><![CDATA[root]]></username>
                     <password><![CDATA[abcABC123]]></password>
                     <dbname><![CDATA[magento]]></dbname>
                     <initStatements><![CDATA[SET NAMES utf8]]></initStatements>
@@ -57,13 +52,13 @@
                 </connection>
             </default_setup>
         </resources>
-        <session_save>database</session_save>
+        <session_save><![CDATA[files]]></session_save>
     </global>
     <admin>
         <routers>
             <adminhtml>
                 <args>
-                    <frontName>control</frontName>
+                    <frontName><![CDATA[control]]></frontName>
                 </args>
             </adminhtml>
         </routers>

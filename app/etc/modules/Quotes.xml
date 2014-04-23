@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Freaks_Quotes>
+             <active>true</active>
+             <codePool>community</codePool>
+        </Freaks_Quotes>
+    </modules>
+</config>

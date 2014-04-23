@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout version="0.1.0">
+<ismnews_index_index>
+    <reference name="content">
+        <block type="core/template" name="ismnews" template="ism/news.phtml"></block>
+    </reference>
+</ismnews_index_index>
+</layout>

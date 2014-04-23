@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <adminhtml_quotes_index>
+        <reference name="content">
+            <block type="freaks_quotes/adminhtml_quotes" name="quotes.grid_container" />
+        </reference>
+    </adminhtml_quotes_index>
+
+    <adminhtml_quotes_new>
+        <update handle="adminhtml_quotes_edit"/>
+    </adminhtml_quotes_new>
+
+    <adminhtml_quotes_edit>
+        <reference name="content">
+            <block type="freaks_quotes/adminhtml_edit" name="quotes.edit" />
+        </reference>
+    </adminhtml_quotes_edit>
+</layout>

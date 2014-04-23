@@ -1,0 +1,1 @@
+alert('skript is work');

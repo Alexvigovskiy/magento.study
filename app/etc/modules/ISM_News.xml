@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <ISM_News>
+             <active>true</active>
+             <codePool>community</codePool>
+        </ISM_News>
+    </modules>
+</config>

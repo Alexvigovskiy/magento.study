@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<frontend>
+        <routers>
+            <test_Weblog>
+                <use>standard</use>
+                <args>
+                    <module>test_Weblog</module>
+                    <frontName>test_Weblog</frontName>
+                </args>
+            </test_Weblog>
+        </routers>
+    </frontend>

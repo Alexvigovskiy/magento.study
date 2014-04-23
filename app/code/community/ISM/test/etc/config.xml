@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <ISM_test>
+        <version>0.0.1</version>
+        </ISM_test>
+    </modules>
+    <frontend>
+        <routers>
+            <t_module>
+                <use>standard</use>
+                <args>
+                    <module>ISM_test</module>
+                    <frontName>testm</frontName>
+                </args>
+            </t_module>
+        </routers>
+    </frontend>
+</config>

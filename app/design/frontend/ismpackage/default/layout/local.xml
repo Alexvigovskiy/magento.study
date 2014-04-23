@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+<default>
+	<reference name="head">
+		<action method="addItem">
+			<type>skin_js</type>
+			<script>js/new_head.js</script>
+		</action>
+	</reference>
+	
+	<reference name="right">
+	<block type="core/template" after="catalog-product-related" before="catalog-compare-sidebar" template="ism/productextra.phtml" name="prodextra.sidebar"/>
+        </reference>
+	
+	<reference name="top.links">
+            <action method="addLink" translate="label title">
+                <label>About srore</label>
+                <url>/about-magento-demo-store</url>
+                <title>About</title>
+                <prepare/>
+                <urlParams/>
+                <position>10</position>
+            </action>
+        </reference>
+</default>
+</layout>
+
