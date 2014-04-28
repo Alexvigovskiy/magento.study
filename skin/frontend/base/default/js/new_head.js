@@ -1,1 +1,1 @@
-alert('skript is work');
+//alert('skript is work');

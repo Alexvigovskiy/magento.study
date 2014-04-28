@@ -2,8 +2,11 @@
 <config>
     <modules>
         <ISM_News>
-             <active>true</active>
-             <codePool>community</codePool>
+            <active>true</active>
+            <codePool>community</codePool>
+            <depends>
+                <Mage_Widget />
+            </depends>
         </ISM_News>
     </modules>
 </config>

@@ -7,6 +7,7 @@ CREATE TABLE {$this->getTable('news')} (
 `news_id` int(11) unsigned NOT NULL auto_increment,
 `title` varchar(255) NOT NULL default '',
 `filename` varchar(255) NOT NULL default '',
+'publish_date` datetime NULL,
 `announce` text NOT NULL default '',
 `text` text NOT NULL default '',
 `status` smallint(6) NOT NULL default '0',

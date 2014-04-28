@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<widgets>
+    <news_widget type="news/latest">
+        <name>Latest news</name>
+        <description type="desc">Latest news widget</description>
+        <parameters>
+            <news_count translate="label">
+                <required>1</required>
+                <visible>1</visible>
+                <value>2</value>
+                <label>Number of last news to display</label>
+                <type>text</type>
+            </news_count>
+            <template translate="label">
+                <label>Frontend Template</label>
+                <visible>1</visible>
+                <required>1</required>
+                <type>select</type>
+                <values>
+                    <text translate="label">
+                        <value>news/widget.phtml</value>
+                        <label>News latest links</label>
+                    </text>
+                </values>
+            </template>
+        </parameters>
+    </news_widget>
+</widgets>
