@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<config>
-    <modules>
-        <Loud_Weblog>
-            <active>true</active>
-            <codePool>community</codePool>
-        </LOud_Weblog>
-    </modules>
-</config>

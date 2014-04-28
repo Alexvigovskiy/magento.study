@@ -1,0 +1,9 @@
+<h3><?php echo $this->__('Latest news from ISM') ?></h3>
+<ul>
+    <?php foreach ($this->getNewsList() as $item): ?>
+        <p><?php echo "<li><a href='/news/index/view/id/" . $item['news_id'] . "'>" . $item['title'] . "</a></li>" ?></p>
+        <p><?php echo $item['announce'] ?></p>
+    <?php endforeach; ?>
+</ul>
+<br>
+<p><?php echo "<div align='right'><a href='/news/index/' >All news</a></div>"/* .$this->getCount() */; ?></p>
