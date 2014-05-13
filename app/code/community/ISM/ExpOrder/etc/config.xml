@@ -1,112 +1,45 @@
 <?xml version="1.0"?>
 <config>
     <modules>
-        <ISM_News>
-            <version>0.1.0</version>
-        </ISM_News>
+        <ISM_ExpOrder>
+            <version>1.0.0</version>
+        </ISM_ExpOrder>
     </modules>
     <frontend>
         <routers>
-            <news>
+            <ism_exporder>
                 <use>standard</use>
                 <args>
-                    <module>ISM_News</module>
-                    <frontName>news</frontName>
+                    <module>ISM_ExpOrder</module>
+                    <frontName>ism_exporder</frontName>
                 </args>
-            </news>
+            </ism_exporder>
         </routers>
         <layout>
             <updates>
                 <news>
-                    <file>news.xml</file>
+                    <file>ism_exporder.xml</file>
                 </news>
             </updates>
         </layout>
     </frontend>
-    <admin>
-        <routers>
-            <news>
-                <use>admin</use>
-                <args>
-                    <module>ISM_News</module>
-                    <frontName>news</frontName>
-                </args>
-            </news>
-        </routers>
-    </admin>
-    <adminhtml>
-        <layout>
-            <updates>
-                <news>
-                    <file>news.xml</file>
-                </news>
-            </updates>
-        </layout>
-    </adminhtml>
     <global>
         <models>
-            <news>
-                <class>ISM_News_Model</class>
-                <resourceModel>news_mysql4</resourceModel>
-            </news>
-            <news_mysql4>
-                <class>ISM_News_Model_Mysql4</class>
-                <entities>
-                    <news>
-                        <table>news</table>
-                    </news>
-                </entities>
-            </news_mysql4>
+            <ism_exporder>
+                <class>ISM_ExpOrder_Model</class>
+            </ism_exporder>
         </models>
         <resources>
-            <news_setup>
+            <ism_exporder_setup>
                 <setup>
-                    <module>H_News</module>
+                    <module>ISM_ExpOrder</module>
                 </setup>
-                <connection>
-                    <use>core_setup</use>
-                </connection>
-            </news_setup>
-            <news_write>
-                <connection>
-                    <use>core_write</use>
-                </connection>
-            </news_write>
-            <news_read>
-                <connection>
-                    <use>core_read</use>
-                </connection>
-            </news_read>
+            </ism_exporder_setup>
         </resources>
-        <blocks>
-            <news>
-                <class>ISM_News_Block</class>
-            </news>
-        </blocks>
         <helpers>
             <news>
-                <class>ISM_News_Helper</class>
+                <class>ISM_ExpOrder_Helper</class>
             </news>
         </helpers>
-        <events>
-            <customer_login>
-                <observers>
-                    <news_observer>
-                        <type>model</type>
-                        <class>news/observer</class>
-                        <method>logCustomer</method>
-                    </news_observer>
-                </observers>    
-            </customer_login>
-            <widget_log>
-                <observers>
-                    <news_observer>
-                        <type>model</type>
-                        <class>news/observer</class>
-                        <method>logCollection</method>
-                    </news_observer>
-                </observers>    
-            </widget_log>
-        </events>
     </global>
 </config>

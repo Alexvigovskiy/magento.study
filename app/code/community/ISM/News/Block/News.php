@@ -3,18 +3,15 @@
 class ISM_News_Block_News extends Mage_Core_Block_Template {
 
     public function getNews() {
-        if (!$this->hasData('news')) {
-            $this->setData('news', Mage::registry('news'));
-        }
-        return $this->getData('news');
+        return Mage::getModel("news/news")->load($this->getRequest()->getParam('id'));
     }
 
     public function getNewsList() {
-        $collection = Mage::getModel("news/news")->getCollection()->addFilter('status', '1');
+        $collection = Mage::getModel("news/news")->getCollection()->addFilter('status = 1 AND publish_date >= "' . date("Y/m/d") . '"');
         return $collection;
     }
 
-    function limitCharacter($string, $limit = 20, $suffix = ' . . .') {
+    public function limitCharacter($string, $limit = 20, $suffix = ' . . .') {
         $string = strip_tags($string);
         if (strlen($string) < $limit) {
             return $string;

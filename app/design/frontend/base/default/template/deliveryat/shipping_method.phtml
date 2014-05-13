@@ -40,7 +40,7 @@
         <label for="delivery_date"><?php echo $this->__('Delivery Date') ?></label>
 
         <div class="input-box">
-            <input type="text" id="deliveryat" name="delivery_date" class="input-text required-entry"/><em>*</em>
+            <input type="text" id="deliveryat" name="delivery_date" class="input-text"/><em>*</em>
             <img title="Select date" id="_dob_trig" src="<?php echo $this->getSkinUrl('images/calendar.gif'); ?>"
                  class="v-middle">
         </div>
@@ -67,7 +67,28 @@
         ifFormat: '%m/%e/%y',
         button: '_dob_trig',
         align: 'Bl',
-        singleClick: true
+        singleClick: true,
+        disableFunc: function(date) {
+          var now= new Date();
+        if(date.getFullYear()<now.getFullYear())
+        {
+            return true;
+        }
+        if(date.getFullYear()==now.getFullYear())
+        {
+            if(date.getMonth()<now.getMonth())
+            {
+                return true;
+            }
+        }
+        if(date.getMonth()==now.getMonth())
+        {
+            if(date.getDate()<now.getDate())
+            {
+                return true;
+            }
+        }
+    },
     });
     //]]>
 </script>

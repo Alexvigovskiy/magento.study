@@ -58,7 +58,7 @@ class ISM_News_Adminhtml_NewsController extends Mage_Adminhtml_Controller_action
             $model = Mage::getModel('news/news');
             $model->setData($data)->setId($this->getRequest()->getParam('id'));
             try {
-                if ($model->getCreatedTime == NULL || $model->getUpdateTime() == NULL) {
+                if ($model->hasData($model->setCreatedTime()) || $model->hasData($model->setUpdateTime())) {
                     $model->setCreatedTime(now())->setUpdateTime(now());
                 } else {
                     $model->setUpdateTime(now());

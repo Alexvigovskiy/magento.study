@@ -1,10 +1,10 @@
 <?php
 
-class ISM_News_Model_Mysql4_News_Collection extends Mage_Core_Model_Mysql4_Collection_Abstract {
+class ISM_ExpOrder_Model_Resource_ExpOrder_Collection extends Mage_Core_Model_Resource_Db_Collection_Abstract {
 
     public function _construct() {
         parent::_construct();
-        $this->_init('news/news');
+        $this->_init('ism_exporder/exporder');
     }
 
 }

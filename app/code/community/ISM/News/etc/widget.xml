@@ -17,9 +17,13 @@
                 <required>1</required>
                 <type>select</type>
                 <values>
-                    <text translate="label">
+                    <ann translate="label">
                         <value>news/widget.phtml</value>
-                        <label>News latest links</label>
+                        <label>News latest links(announce)</label>
+                    </ann>
+                    <text translate="label">
+                        <value>news/title.phtml</value>
+                        <label>News latest links(title)</label>
                     </text>
                 </values>
             </template>

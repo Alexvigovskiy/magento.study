@@ -1,9 +1,9 @@
 <?php
 
-class ISM_News_Model_Mysql4_News extends Mage_Core_Model_Mysql4_Abstract {
+class ISM_ExpOrder_Model_Resource_ExpOrder extends Mage_Core_Model_Resource_Db_Abstract {
 
     public function _construct() {
-        $this->_init('news/news', 'news_id');
+        $this->_init('ism_exporder/exporder_entities', 'exporder_id');
     }
 
 }

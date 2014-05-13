@@ -2,10 +2,10 @@
 <table>
     <?php foreach ($this->getNewsList() as $item): ?>
         <tr>
-            <td><img src="<?php echo Mage::getBaseUrl('media') . 'news' . DS . $item['filename'] ?>" alt="<?php echo $item['title'] ?>" width="100" height="100" style="border: 1px solid #d5d5d5;padding:3px;margin-right: 10px;" /></td>
+            <td><img src="<?php echo Mage::getBaseUrl('media') . 'news' . DS . $item->getFilename() ?>" alt="<?php echo $item['title'] ?>" width="100" height="100" style="border: 1px solid #d5d5d5;padding:3px;margin-right: 10px;" /></td>
             <td>
-                <h5><?php echo "<a href='/news/index/view/id/" . $item['news_id'] . "'>" . $item['title'] . "</a>" ?></h5>
-                <p><?php echo $this->limitCharacter($item['announce'], 180) . "<br><div align='right'><a href='/news/index/view/id/" . $item['news_id'] . "'>read more</a></div>" ?></p>
+                <h5><?php echo "<a href='".$this->getUrl('')."news/index/view/id/". $item->getId()."'>" . $item->getTitle() . "</a>" ?></h5>
+                <p><?php echo $this->limitCharacter($item->getAnnounce(), 180) . "<br><div align='right'><a href='/news/index/view/id/" . $item->getId() . "'>read more</a></div>" ?></p>
             </td>
         </tr>
     <?php endforeach; ?>

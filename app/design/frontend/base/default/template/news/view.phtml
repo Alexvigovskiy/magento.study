@@ -1,13 +1,13 @@
 <?php $item = $this->getNews(); ?>
-<h3><?php echo $item['title']; ?></h3>
-<p style="font-size: small;color: #777">published on: <?php echo date('M jS, Y', strtotime($item['update_time'])); ?> <a href="/news">Back to all news</a></p>
+<h3><?php echo $item->getTitle(); ?></h3>
+<p style="font-size: small;color: #777">published on: <?php echo date('M jS, Y', strtotime($item->getUpdateTime())); ?> <a href="/news">Back to all news</a></p>
 <div>
     <span style="float: left">
-        <img src="<?php echo Mage::getBaseUrl('media') . 'news' . DS . $item['filename'] ?>" alt="<?php echo $item['title'] ?>" width="160" height="160" style="border: 1px solid #d5d5d5;padding:3px;margin-right: 10px;" />
+        <img src="<?php echo Mage::getBaseUrl('media') . 'news' . DS . $item->getFilename() ?>" alt="<?php echo $item['title'] ?>" width="160" height="160" style="border: 1px solid #d5d5d5;padding:3px;margin-right: 10px;" />
     </span>
     <span>
-        <p><?php echo $item['text']; ?></p>
+        <p><?php echo $item->getText(); ?></p>
     </span>
     <p style="clear: both"></p>
 </div>
-<div align='right'><a href="/news">Back to all news</a></div>
+<div align='right'><a href=<?php echo $this->getUrl()."news>Back to all news</a>"?></div>
