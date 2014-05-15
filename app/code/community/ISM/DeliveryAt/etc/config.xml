@@ -23,6 +23,13 @@
                 </setup>
             </ism_deliveryat_setup>
         </resources>
+        <fieldsets>
+            <sales_convert_quote>
+                <deliverydate>
+                    <to_order>deliverydate</to_order>
+                </deliverydate>
+            </sales_convert_quote>
+        </fieldsets>
     </global>
     <frontend>
         <events>
@@ -35,15 +42,6 @@
                     </ism_deliveryat>
                 </observers>
             </checkout_controller_onepage_save_shipping_method>
-            <sales_convert_quote_to_order>
-                <observers>
-                    <ism_deliveryat>
-                        <type>model</type>
-                        <class>ism_deliveryat/observer</class>
-                        <method>salesConvertQuoteToOrder</method>
-                    </ism_deliveryat>
-                </observers>
-            </sales_convert_quote_to_order>
         </events>
         <layout>
             <updates>

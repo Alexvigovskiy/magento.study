@@ -444,7 +444,11 @@ class Mage_Checkout_OnepageController extends Mage_Checkout_Controller_Action
                 $this->getOnepage()->getQuote()->collectTotals();
                 $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
 
+
                 $result['goto_section'] = 'payment';
+
+
+
                 $result['update_section'] = array(
                     'name' => 'payment-method',
                     'html' => $this->_getPaymentMethodsHtml()

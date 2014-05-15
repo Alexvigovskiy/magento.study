@@ -293,12 +293,12 @@ class ISM_Exporder_IndexController extends Mage_Core_Controller_Front_Action {
         }
         //Shippment
         //Creating shipment to tjis order
-        /*if ($order->canShip()) {
-            $itemQty = $order->getItemsCollection()->count();
-            $shipment = Mage::getModel('sales/service_order', $order)->prepareShipment($itemQty);
-            $shipment = new Mage_Sales_Model_Order_Shipment_Api();
-            $shipmentId = $shipment->create($order->getIncrementId());
-        }*/
+        /* if ($order->canShip()) {
+          $itemQty = $order->getItemsCollection()->count();
+          $shipment = Mage::getModel('sales/service_order', $order)->prepareShipment($itemQty);
+          $shipment = new Mage_Sales_Model_Order_Shipment_Api();
+          $shipmentId = $shipment->create($order->getIncrementId());
+          } */
         //Load layout
         $this->loadLayout();
         $this->renderLayout();
@@ -364,4 +364,107 @@ class ISM_Exporder_IndexController extends Mage_Core_Controller_Front_Action {
         $this->renderLayout();
     }
 
+    public function sortAction() {
+        //Import data
+        //Prepare all paths and models
+        $magento_base_path = Mage::getBaseDir();
+        $xml_path_input = $magento_base_path . "/var/export/products/input";
+        $xml_path_success = $magento_base_path . "/var/export/products/success";
+        $xml_path_failed = $magento_base_path . "/var/export/products/failed";
+        $xml_file_input = $xml_path_input . "/" . $_GET["name"] . ".xml";
+        $xml_doc = new DOMDocument();
+        $xml_doc->load($xml_file_input);
+        //Import all nodes from product xml file
+        $root = $xml_doc->getElementsByTagName('products');
+        foreach ($root as $product) {
+            $import_product = $product->getElementsByTagName('product');
+            foreach ($import_product as $node) {
+                //Import product data 
+                $import_array['name'] = $node->getElementsByTagName('name')->item(0)->nodeValue;
+                $import_array['sku'] = $node->getElementsByTagName('sku')->item(0)->nodeValue;
+                $import_array['type'] = $node->getElementsByTagName('type')->item(0)->nodeValue;
+                $import_array['attribute_set'] = $node->getElementsByTagName('attribute_set')->item(0)->nodeValue;
+                $import_array['category_ids'] = $node->getElementsByTagName('category_ids')->item(0)->nodeValue;
+                $import_array['website_ids'] = $node->getElementsByTagName('website_ids')->item(0)->nodeValue;
+                $import_array['description'] = $node->getElementsByTagName('description')->item(0)->nodeValue;
+                $import_array['short_description'] = $node->getElementsByTagName('short_description')->item(0)->nodeValue;
+                $import_array['price'] = $node->getElementsByTagName('price')->item(0)->nodeValue;
+                $def_att_array['weight'] = $node->getElementsByTagName('weight')->item(0)->nodeValue;
+                $def_att_array['status'] = $node->getElementsByTagName('status')->item(0)->nodeValue;
+                $def_att_array['tax_class_id'] = $node->getElementsByTagName('tax_class_id')->item(0)->nodeValue;
+                $stock_array['is_in_stock'] = $node->getElementsByTagName('is_in_stock')->item(0)->nodeValue;
+                $stock_array['qty'] = $node->getElementsByTagName('qty')->item(0)->nodeValue;
+                $def_att_array['stock_data'] = $stock_array;
+                $import_array['default_attributes'] = $def_att_array;
+
+                $product_model = Mage::getModel('catalog/product');
+
+                $product_model->setSku($import_array['sku'])
+                        ->setAttributeSetId($import_array['attribute_set'])
+                        ->setTypeId($import_array['type'])
+                        ->setName($import_array['name'])
+                        ->setCategoryIds(explode('/', $import_array['category_ids']))
+                        ->setWebsiteIDs(explode('/', $import_array['website_ids']))
+                        ->setDescription($import_array['description'])
+                        ->setShortDescription($import_array['short_description'])
+                        ->setPrice($import_array['price']);
+                //Set default attributes data
+                $product_model->setWeight($def_att_array['weight'])
+                        ->setVisibility(Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH)
+                        ->setStatus($def_att_array['status'])
+                        ->setTaxClassId($def_att_array['tax_class_id'])
+                        ->setStockData(array(
+                            'is_in_stock' => $stock_array['is_in_stock'],
+                            'qty' => $stock_array['qty']
+                ));
+                //Set created at time
+                $product_model->setCreatedAt(strtotime('now'));
+                //try to save this product
+                $success_file = $xml_path_success . "/" . $import_array['sku'] . ".xml";
+                $failed_file = $xml_path_failed . "/" . $import_array['sku'] . ".xml";
+                $doc = new DomDocument('1.0', 'UTF-8');
+                $doc->preserveWhiteSpace = false;
+                $doc->formatOutput = true;
+                $root = $doc->createElement('product');
+                $root = $doc->appendChild($root);
+                foreach ($import_array as $field_name => $field_value) {
+                    $child = $doc->createElement($field_name);
+                    $child = $root->appendChild($child);
+                    if (is_array($field_value)) {
+                        foreach ($field_value as $child_name => $child_value) {
+                            if (strpos($child_name, 'item') !== false) {
+                                $itm = $doc->createElement('item');
+                            } else {
+                                $itm = $doc->createElement($child_name);
+                            }
+                            $itm = $child->appendChild($itm);
+                            $value = $doc->createTextNode($child_value);
+                            $value = $itm->appendChild($value);
+                            if (is_array($child_value)) {
+                                foreach ($child_value as $item_name => $item_value) {
+                                    $child_itm = $doc->createElement($item_name);
+                                    $child_itm = $itm->appendChild($child_itm);
+                                    $value_itm = $doc->createTextNode($item_value);
+                                    $value_itm = $child_itm->appendChild($value_itm);
+                                }
+                            }
+                        }
+                    } else {
+                        $value = $doc->createTextNode($field_value);
+                        $value = $child->appendChild($value);
+                    }
+                }
+                try {
+                    $product_model->save();
+                    $doc->save($success_file);
+                } catch (Exception $ex) {
+                    $doc->save($failed_file);
+                }
+            }
+        }
+        unlink($xml_file_input);
+        //Load layout
+        $this->loadLayout();
+        $this->renderLayout();
+    }
 }
