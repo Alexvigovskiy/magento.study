@@ -1,53 +1,43 @@
 <?xml version="1.0"?>
 <config>
     <modules>
-        <ISM_CustomPayment>
+        <ISM_CustomShippment>
             <version>1.0.0</version>
-        </ISM_CustomPayment>
+        </ISM_CustomShippment>
     </modules>
     <global>
         <models>
-            <ism_custompayment>
-                <class>ISM_CustomPayment_Model</class>
-            </ism_custompayment>
+            <customshippment>
+                <class>ISM_CustomShippment_Model</class>
+            </customshippment>
         </models>
         <blocks>
-            <ism_custompayment>
-                <class>ISM_CustomPayment_Block</class>
-            </ism_custompayment>
+            <customshippment>
+                <class>ISM_CustomShippment_Block</class>
+            </customshippment>
         </blocks>
         <resources>
-            <ism_custompayment_setup>
+            <customshippment_setup>
                 <setup>
-                    <module>ISM_CustomPayment</module>
+                    <module>ISM_CustomShippment</module>
                 </setup>
                 <connection>
                     <use>core_setup</use>
                 </connection>
-            </ism_custompayment_setup>
-            <ism_custompayment_write>
-                <connection>
-                    <use>core_write</use>
-                </connection>
-            </ism_custompayment_write>
-            <ism_custompayment_read>
-                <connection>
-                    <use>core_read</use>
-                </connection>
-            </ism_custompayment_read>
+            </customshippment_setup>
         </resources>
     </global>
-    <default>
-        <payment>
-            <ism_custompayment>
-                <active>0</active>
-                <model>ism_custompayment/paymentMethod</model>
-                <order_status>pending</order_status>
-                <title>Credit Card (ISM eCompany)</title>
-                <cctypes>AE,VI,MC,DI</cctypes>
-                <payment_action>authorize</payment_action>
-                <allowspecific>0</allowspecific>
-            </ism_custompayment>
-        </payment>
+    <default>  
+        <carriers>    
+            <customshipping>
+                <active>1</active>
+                <sallowspecific>0</sallowspecific>
+                <model>customshippment/carrier_customshipping</model>
+                <name>ISM custom shipping</name>
+                <type>I</type>
+                <specificerrmsg>This shipping method is currently unavailable. If you would like to ship using this shipping method, please contact us.</specificerrmsg>
+                <handling_type>F</handling_type>
+            </customshipping>
+        </carriers>
     </default>
 </config>

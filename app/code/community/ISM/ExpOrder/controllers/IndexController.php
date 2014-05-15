@@ -7,97 +7,110 @@ class ISM_Exporder_IndexController extends Mage_Core_Controller_Front_Action {
         //Prepare all paths and models
         $magento_base_path = Mage::getBaseDir();
         $xml_path = $magento_base_path . "/var/export";
-        $orders_collection = Mage::getResourceModel('sales/order_collection');
+        $orders_collection = Mage::getResourceModel('sales/order_collection')->addFieldToFilter('exported', array('null' => true))->addAttributeToFilter('total_due', 0);
         $all_id = $orders_collection->getAllIds();
         //Export all orders
         foreach ($all_id as $this_id) {
             $order_model = Mage::getModel('sales/order')->load($this_id);
-            if ($order_model->hasData($order_model->getExported())) {
-                //Get all items from this order
-                $items = $order_model->getAllItems();
-                //Get informstion about adrress
-                $addres_id = $order_model->getShippingAddress()->getId();
-                $_address = Mage::getModel('sales/order_address')->load($addres_id);
-                //Get information about payment
-                $payment = $order_model->getPayment();
-                //Order info
-                $export_array['id'] = $order_model->getRealOrderId();
-                $export_array['total_price'] = $order_model->getBaseGrandTotal();
-                $export_array['created'] = $order_model->getCreatedAtFormated('long');
-                $export_array['total_item_count'] = count($items);
-                $export_array['store_id'] = $order_model->getStoreId();
-                //Shipping info
-                $shipping_array['shipping_amount'] = $order_model->getBaseShippingAmount();
-                $shipping_array['shipping_method'] = $order_model->getShippingMethod();
-                $shipping_array['shipping_desc'] = $order_model->getShippingDescription();
-                $export_array['shipping'] = $shipping_array;
-                //Customer info
-                $customer_array['customer_firstname'] = $order_model->getCustomerFirstname();
-                $customer_array['customer_lastname'] = $order_model->getCustomerLastname();
-                $customer_array['email'] = $order_model->getCustomerEmail();
-                $export_array['customer'] = $customer_array;
-                //Addres info
-                $address_array['country_id'] = $_address->getCountryId();
-                $address_array['postcode'] = $_address->getPostcode();
-                $address_array['city'] = $_address->getCity();
-                $str = $_address->getStreet();
-                $address_array['street'] = $str[0];
-                $address_array['telephone'] = $_address->getTelephone();
-                $export_array['address'] = $address_array;
-                //Payment info
-                $payment_array['payment_method'] = $payment->getMethod();
-                $payment_array['cc_owner'] = $payment->getCcOwner();
-                $payment_array['cc_exp_month'] = $payment->getCcExpMonth();
-                $payment_array['cc_exp_year'] = $payment->getCcExpYear();
-                $payment_array['cc_type'] = $payment->getCcType();
-                $payment_array['cc_number_enc'] = $payment->getCcNumberEnc();
-                $payment_array['po_number'] = $payment->getPoNumber();
-                $export_array['payment'] = $payment_array;
-                //Items info
-                foreach ($items as $item_id => $item) {
-                    if ($order_model->hasData($item->getParentItemId())) {
-                        $items_array['item_name_' . $item_id] = $item->getName();
-                        $items_array['item_type_' . $item_id] = $item->getProductType();
-                        $items_array['item_price_' . $item_id] = $item->getPrice();
-                        $items_array['item_sku_' . $item_id] = $item->getSku();
-                        $items_array['item_prodid_' . $item_id] = $item->getProductId();
-                        $items_array['item_qty_' . $item_id] = $item->getQtyToInvoice();
-                        $items_array['item_discount_' . $item_id] = $item->getDiscountAmount();
-                    }
+            //Get all items from this order
+            $items = $order_model->getAllItems();
+            //Get informstion about adrress
+            $addres_id = $order_model->getShippingAddress()->getId();
+            $_address = Mage::getModel('sales/order_address')->load($addres_id);
+            //Get information about payment
+            $payment = $order_model->getPayment();
+            //Order info
+            $export_array['id'] = $order_model->getRealOrderId();
+            $export_array['total_price'] = $order_model->getBaseGrandTotal();
+            $export_array['created'] = $order_model->getCreatedAtFormated('long');
+            $export_array['total_item_count'] = count($items);
+            $export_array['store_id'] = $order_model->getStoreId();
+            //Shipping info
+            $shipping_array['shipping_amount'] = $order_model->getBaseShippingAmount();
+            $shipping_array['shipping_method'] = $order_model->getShippingMethod();
+            $shipping_array['shipping_desc'] = $order_model->getShippingDescription();
+            $export_array['shipping'] = $shipping_array;
+            //Customer info
+            $customer_array['customer_firstname'] = $order_model->getCustomerFirstname();
+            $customer_array['customer_lastname'] = $order_model->getCustomerLastname();
+            $customer_array['email'] = $order_model->getCustomerEmail();
+            $export_array['customer'] = $customer_array;
+            //Addres info
+            $address_array['country_id'] = $_address->getCountryId();
+            $address_array['postcode'] = $_address->getPostcode();
+            $address_array['city'] = $_address->getCity();
+            $str = $_address->getStreet();
+            $address_array['street'] = $str[0];
+            $address_array['telephone'] = $_address->getTelephone();
+            $export_array['address'] = $address_array;
+            //Payment info
+            $payment_array['payment_method'] = $payment->getMethod();
+            $payment_array['cc_owner'] = $payment->getCcOwner();
+            $payment_array['cc_exp_month'] = $payment->getCcExpMonth();
+            $payment_array['cc_exp_year'] = $payment->getCcExpYear();
+            $payment_array['cc_type'] = $payment->getCcType();
+            $payment_array['cc_number_enc'] = $payment->getCcNumberEnc();
+            $payment_array['po_number'] = $payment->getPoNumber();
+            $export_array['payment'] = $payment_array;
+            //Items info
+            foreach ($items as $item_id => $item) {
+                if ($order_model->hasData($item->getParentItemId())) {
+                    $items_array['name'] = $item->getName();
+                    $items_array['type'] = $item->getProductType();
+                    $items_array['price'] = $item->getPrice();
+                    $items_array['sku'] = $item->getSku();
+                    $items_array['prodid'] = $item->getProductId();
+                    $items_array['qty'] = $item->getQtyOrdered();
+                    $items_array['discount'] = $item->getDiscountAmount();
                 }
-                unset($items);
-                $export_array['items'] = $items_array;
+                $all_items_array['item_' . $item_id] = $items_array;
                 unset($items_array);
-
-                //Prepare xml document
-                $xml_file = $xml_path . "/" . $order_model->getRealOrderId() . ".xml";
-                $doc = new DomDocument('1.0', 'UTF-8');
-                $doc->preserveWhiteSpace = false;
-                $doc->formatOutput = true;
-                $root = $doc->createElement('order');
-                $root = $doc->appendChild($root);
-                //Add all nodes
-                foreach ($export_array as $field_name => $field_value) {
-                    $child = $doc->createElement($field_name);
-                    $child = $root->appendChild($child);
-                    if (is_array($field_value)) {
-                        foreach ($field_value as $child_name => $child_value) {
-                            $itm = $doc->createElement($child_name);
-                            $itm = $child->appendChild($itm);
-                            $value = $doc->createTextNode($child_value);
-                            $value = $itm->appendChild($value);
-                        }
-                    } else {
-                        $value = $doc->createTextNode($field_value);
-                        $value = $child->appendChild($value);
-                    }
-                }
-                //Save all changes
-                $order_model->setExported('1');
-                $order_model->save();
-                $doc->save($xml_file);
             }
+            unset($items);
+            $export_array['items'] = $all_items_array;
+            unset($all_items_array);
+
+            //Prepare xml document
+            $xml_file = $xml_path . "/" . $order_model->getRealOrderId() . ".xml";
+            $doc = new DomDocument('1.0', 'UTF-8');
+            $doc->preserveWhiteSpace = false;
+            $doc->formatOutput = true;
+            $root = $doc->createElement('order');
+            $root = $doc->appendChild($root);
+            //Add all nodes
+            foreach ($export_array as $field_name => $field_value) {
+                $child = $doc->createElement($field_name);
+                $child = $root->appendChild($child);
+                if (is_array($field_value)) {
+                    foreach ($field_value as $child_name => $child_value) {
+                        if (strpos($child_name, 'item') !== false) {
+                            $itm = $doc->createElement('item');
+                        } else {
+                            $itm = $doc->createElement($child_name);
+                        }
+                        $itm = $child->appendChild($itm);
+                        $value = $doc->createTextNode($child_value);
+                        $value = $itm->appendChild($value);
+                        if (is_array($child_value)) {
+                            foreach ($child_value as $item_name => $item_value) {
+                                $child_itm = $doc->createElement($item_name);
+                                $child_itm = $itm->appendChild($child_itm);
+                                $value_itm = $doc->createTextNode($item_value);
+                                $value_itm = $child_itm->appendChild($value_itm);
+                            }
+                        }
+                    }
+                } else {
+                    $value = $doc->createTextNode($field_value);
+                    $value = $child->appendChild($value);
+                }
+            }
+            //Save all changes
+            $order_model->setExported('1');
+            $order_model->save();
+            $doc->save($xml_file);
         }
+
         //Load layout
         $this->loadLayout();
         $this->renderLayout();
@@ -280,12 +293,12 @@ class ISM_Exporder_IndexController extends Mage_Core_Controller_Front_Action {
         }
         //Shippment
         //Creating shipment to tjis order
-        if ($order->canShip()) {
+        /*if ($order->canShip()) {
             $itemQty = $order->getItemsCollection()->count();
             $shipment = Mage::getModel('sales/service_order', $order)->prepareShipment($itemQty);
             $shipment = new Mage_Sales_Model_Order_Shipment_Api();
             $shipmentId = $shipment->create($order->getIncrementId());
-        }
+        }*/
         //Load layout
         $this->loadLayout();
         $this->renderLayout();

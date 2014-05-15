@@ -3,7 +3,7 @@
 <p style="font-size: small;color: #777">published on: <?php echo date('M jS, Y', strtotime($item->getUpdateTime())); ?> <a href="/news">Back to all news</a></p>
 <div>
     <span style="float: left">
-        <img src="<?php echo Mage::getBaseUrl('media') . 'news' . DS . $item->getFilename() ?>" alt="<?php echo $item['title'] ?>" width="160" height="160" style="border: 1px solid #d5d5d5;padding:3px;margin-right: 10px;" />
+        <img src="<?php echo Mage::getBaseUrl('media') . 'news' . DS . $item->getFilename() ?>" alt="<?php echo $item->getItem() ?>" width="160" height="160" style="border: 1px solid #d5d5d5;padding:3px;margin-right: 10px;" />
     </span>
     <span>
         <p><?php echo $item->getText(); ?></p>
