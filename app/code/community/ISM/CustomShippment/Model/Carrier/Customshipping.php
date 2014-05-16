@@ -11,6 +11,7 @@ class ISM_CustomShippment_Model_Carrier_Customshipping extends Mage_Shipping_Mod
         }
         $result = Mage::getModel('shipping/rate_result');
         $shippingPrice = '0.00';
+
         if ($shippingPrice !== false) {
             $method = Mage::getModel('shipping/rate_result_method');
             $method->setCarrier($this->_code);
@@ -24,9 +25,6 @@ class ISM_CustomShippment_Model_Carrier_Customshipping extends Mage_Shipping_Mod
         return $result;
     }
 
-    /**
-     * This method is used when viewing / listing Shipping Methods with Codes programmatically
-     */
     public function getAllowedMethods() {
         return array($this->_code => $this->getConfigData('name'));
     }

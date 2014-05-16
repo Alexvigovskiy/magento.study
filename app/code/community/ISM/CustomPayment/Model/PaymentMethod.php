@@ -7,7 +7,7 @@ class ISM_CustomPayment_Model_PaymentMethod extends Mage_Payment_Model_Method_Cc
     //Is this payment method a gateway (online auth/charge) ?
     protected $_isGateway = true;
     //Can authorize online?
-    protected $_canAuthorize = true;
+    protected $_canAuthorize = false;
     //Can capture funds online?
     protected $_canCapture = true;
     //Can capture partial amounts online?

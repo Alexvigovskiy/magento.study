@@ -44,7 +44,7 @@
                 <model>ism_custompayment/paymentMethod</model>
                 <order_status>pending</order_status>
                 <title>Credit Card (ISM eCompany)</title>
-                <cctypes>AE,VI,MC,DI</cctypes>
+                <cctypes>AE,VI,MC,DI,SS,SM,SO,JCB,OT</cctypes>
                 <payment_action>authorize</payment_action>
                 <allowspecific>0</allowspecific>
             </ism_custompayment>

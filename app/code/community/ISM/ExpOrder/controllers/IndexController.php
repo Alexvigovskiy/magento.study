@@ -54,7 +54,7 @@ class ISM_Exporder_IndexController extends Mage_Core_Controller_Front_Action {
             $export_array['payment'] = $payment_array;
             //Items info
             foreach ($items as $item_id => $item) {
-                if ($order_model->hasData($item->getParentItemId())) {
+                if ($item->hasData('parent_item_id')) {
                     $items_array['name'] = $item->getName();
                     $items_array['type'] = $item->getProductType();
                     $items_array['price'] = $item->getPrice();
@@ -368,13 +368,17 @@ class ISM_Exporder_IndexController extends Mage_Core_Controller_Front_Action {
         //Import data
         //Prepare all paths and models
         $magento_base_path = Mage::getBaseDir();
+        //Get path to input files
         $xml_path_input = $magento_base_path . "/var/export/products/input";
+        //Get path to success imported files
         $xml_path_success = $magento_base_path . "/var/export/products/success";
+        //Get path to failed imported files
         $xml_path_failed = $magento_base_path . "/var/export/products/failed";
         $xml_file_input = $xml_path_input . "/" . $_GET["name"] . ".xml";
+        //Create document
         $xml_doc = new DOMDocument();
         $xml_doc->load($xml_file_input);
-        //Import all nodes from product xml file
+        //Import all nodes from products xml file
         $root = $xml_doc->getElementsByTagName('products');
         foreach ($root as $product) {
             $import_product = $product->getElementsByTagName('product');
@@ -389,16 +393,18 @@ class ISM_Exporder_IndexController extends Mage_Core_Controller_Front_Action {
                 $import_array['description'] = $node->getElementsByTagName('description')->item(0)->nodeValue;
                 $import_array['short_description'] = $node->getElementsByTagName('short_description')->item(0)->nodeValue;
                 $import_array['price'] = $node->getElementsByTagName('price')->item(0)->nodeValue;
+                //Import default attribute data 
                 $def_att_array['weight'] = $node->getElementsByTagName('weight')->item(0)->nodeValue;
                 $def_att_array['status'] = $node->getElementsByTagName('status')->item(0)->nodeValue;
                 $def_att_array['tax_class_id'] = $node->getElementsByTagName('tax_class_id')->item(0)->nodeValue;
+                //Import stock data
                 $stock_array['is_in_stock'] = $node->getElementsByTagName('is_in_stock')->item(0)->nodeValue;
                 $stock_array['qty'] = $node->getElementsByTagName('qty')->item(0)->nodeValue;
                 $def_att_array['stock_data'] = $stock_array;
                 $import_array['default_attributes'] = $def_att_array;
-
+                //Get product module
                 $product_model = Mage::getModel('catalog/product');
-
+                //Set product data
                 $product_model->setSku($import_array['sku'])
                         ->setAttributeSetId($import_array['attribute_set'])
                         ->setTypeId($import_array['type'])
@@ -419,9 +425,10 @@ class ISM_Exporder_IndexController extends Mage_Core_Controller_Front_Action {
                 ));
                 //Set created at time
                 $product_model->setCreatedAt(strtotime('now'));
-                //try to save this product
+                //Set succes and failed product xml files
                 $success_file = $xml_path_success . "/" . $import_array['sku'] . ".xml";
                 $failed_file = $xml_path_failed . "/" . $import_array['sku'] . ".xml";
+                //Prepare documenet
                 $doc = new DomDocument('1.0', 'UTF-8');
                 $doc->preserveWhiteSpace = false;
                 $doc->formatOutput = true;
@@ -432,20 +439,16 @@ class ISM_Exporder_IndexController extends Mage_Core_Controller_Front_Action {
                     $child = $root->appendChild($child);
                     if (is_array($field_value)) {
                         foreach ($field_value as $child_name => $child_value) {
-                            if (strpos($child_name, 'item') !== false) {
-                                $itm = $doc->createElement('item');
-                            } else {
-                                $itm = $doc->createElement($child_name);
-                            }
-                            $itm = $child->appendChild($itm);
-                            $value = $doc->createTextNode($child_value);
-                            $value = $itm->appendChild($value);
+                            $def = $doc->createElement($child_name);
+                            $def = $child->appendChild($def);
+                            $def_value = $doc->createTextNode($child_value);
+                            $def_value = $def->appendChild($def_value);
                             if (is_array($child_value)) {
-                                foreach ($child_value as $item_name => $item_value) {
-                                    $child_itm = $doc->createElement($item_name);
-                                    $child_itm = $itm->appendChild($child_itm);
-                                    $value_itm = $doc->createTextNode($item_value);
-                                    $value_itm = $child_itm->appendChild($value_itm);
+                                foreach ($child_value as $sub_name => $sub_value) {
+                                    $stock_child = $doc->createElement($sub_name);
+                                    $stock_child = $def->appendChild($stock_child);
+                                    $stock_value = $doc->createTextNode($sub_value);
+                                    $stock_value = $stock_child->appendChild($stock_value);
                                 }
                             }
                         }
@@ -454,6 +457,7 @@ class ISM_Exporder_IndexController extends Mage_Core_Controller_Front_Action {
                         $value = $child->appendChild($value);
                     }
                 }
+                //try to save and sort this product
                 try {
                     $product_model->save();
                     $doc->save($success_file);
@@ -462,9 +466,11 @@ class ISM_Exporder_IndexController extends Mage_Core_Controller_Front_Action {
                 }
             }
         }
+        //Delete input files
         unlink($xml_file_input);
         //Load layout
         $this->loadLayout();
         $this->renderLayout();
     }
+
 }

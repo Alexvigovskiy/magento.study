@@ -105,8 +105,7 @@ class ISM_News_Adminhtml_NewsController extends Mage_Adminhtml_Controller_action
         } else {
             try {
                 foreach ($newsIds as $newsId) {
-                    $news = Mage::getModel('news/news')->load($newsId);
-                    $news->delete();
+                    $news = Mage::getModel('news/news')->load($newsId)->delete();
                 }
                 Mage::getSingleton('adminhtml/session')->addSuccess(
                         Mage::helper('adminhtml')->__('Total of %d record(s) were successfully deleted', count($newsIds)));

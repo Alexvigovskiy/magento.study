@@ -7,7 +7,9 @@ class ISM_Exporder_AllController extends Mage_Core_Controller_Front_Action {
         //Prepare all paths and models
         $magento_base_path = Mage::getBaseDir();
         $xml_path = $magento_base_path . "/var/export";
+        //Get order collection to available
         $orders_collection = Mage::getResourceModel('sales/order_collection')->addFieldToFilter('exported', array('null' => true))->addAttributeToFilter('total_due', 0);
+        //Get al available Id's
         $all_id = $orders_collection->getAllIds();
         //Export all orders
         foreach ($all_id as $this_id) {
@@ -17,7 +19,7 @@ class ISM_Exporder_AllController extends Mage_Core_Controller_Front_Action {
             $items = $order_model->getAllItems();
             //Items info
             foreach ($items as $item_id => $item) {
-                if ($order_model->hasData($item->getParentItemId())) {
+                if ($item->hasData('parent_item_id')) {
                     $items_array['name'] = $item->getName();
                     $items_array['type'] = $item->getProductType();
                     $items_array['price'] = $item->getPrice();
@@ -33,6 +35,8 @@ class ISM_Exporder_AllController extends Mage_Core_Controller_Front_Action {
             $export_array['items'] = $all_items_array;
             unset($all_items_array);
             $all_orders['order_' . $this_id] = $export_array;
+            $order_model->setExported('1');
+            $order_model->save();
         }
         //Prepare xml document
         $xml_file = $xml_path . "/orders.xml";
@@ -70,6 +74,7 @@ class ISM_Exporder_AllController extends Mage_Core_Controller_Front_Action {
                 }
             }
         }
+        //Save the xml file with orders
         $doc->save($xml_file);
         //Load layout
         $this->loadLayout();
@@ -84,9 +89,10 @@ class ISM_Exporder_AllController extends Mage_Core_Controller_Front_Action {
         $xml_file = $xml_path . "/" . $_GET["file"] . ".xml";
         $xml_doc = new DOMDocument();
         $xml_doc->load($xml_file);
-        //Import all nodes from order xml(except items)
+        //Import all nodes from ordes xml
         $root = $xml_doc->getElementsByTagName('orders');
         foreach ($root as $field_name) {
+            //Split orders into each order 
             $all_orders = $field_name->getElementsByTagName('order');
             foreach ($all_orders as $order) {
                 $import_array['id'] = $order->getElementsByTagName('id')->item(0)->nodeValue;
@@ -95,6 +101,7 @@ class ISM_Exporder_AllController extends Mage_Core_Controller_Front_Action {
                     $import_array['qty'] = $import_array['qty'] + $item->getElementsByTagName('qty')->item(0)->nodeValue;
                 }
                 $order_model = Mage::getModel('sales/order')->loadByIncrementId($import_array['id']);
+                //Try to create a shippment
                 if ($order_model->canShip()) {
                     $shipment = Mage::getModel('sales/service_order', $order_model)->prepareShipment($import_array['qty']);
                     $shipment = new Mage_Sales_Model_Order_Shipment_Api();
