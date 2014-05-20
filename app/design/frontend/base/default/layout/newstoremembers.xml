@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout>
+    <customer_account_edit translate="label">
+        <reference name="my.account.wrapper">
+            <block type="customer/form_edit" name="customer_edit" template="newstoremembers/form/edit.phtml"/>
+        </reference>
+    </customer_account_edit>
+</layout>

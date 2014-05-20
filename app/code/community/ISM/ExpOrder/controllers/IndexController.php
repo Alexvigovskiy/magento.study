@@ -7,7 +7,9 @@ class ISM_Exporder_IndexController extends Mage_Core_Controller_Front_Action {
         //Prepare all paths and models
         $magento_base_path = Mage::getBaseDir();
         $xml_path = $magento_base_path . "/var/export";
-        $orders_collection = Mage::getResourceModel('sales/order_collection')->addFieldToFilter('exported', array('null' => true))->addAttributeToFilter('total_due', 0);
+        $orders_collection = Mage::getResourceModel('sales/order_collection')
+                ->addFieldToFilter('exported', array('null' => true))
+                ->addAttributeToFilter('total_due', 0);
         $all_id = $orders_collection->getAllIds();
         //Export all orders
         foreach ($all_id as $this_id) {

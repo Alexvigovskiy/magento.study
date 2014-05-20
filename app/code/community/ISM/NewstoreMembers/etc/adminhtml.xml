@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <menu>
+        <ism_newstoremembers module="ism_newstoremembers">
+            <title>Newstore Members</title>
+            <sort_order>50</sort_order>
+            <children>
+                <items module="ism_newstoremembers">
+                    <title>Manage member numbers</title>
+                    <sort_order>0</sort_order>
+                    <action>newstoremembers/adminhtml_newstoremembers</action>
+                </items>
+            </children>
+        </ism_newstoremembers>
+    </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <ism_newstoremembers translate="title" module="ism_newstoremembers">
+                        <title>Newstore Members</title>
+                        <sort_order>0</sort_order>
+                        <children>
+                            <items module="ism_newstoremembers">
+                                <title>Manage member numbers</title>
+                                <sort_order>0</sort_order>
+                            </items>
+                        </children>
+                    </ism_newstoremembers>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

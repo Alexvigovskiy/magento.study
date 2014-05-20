@@ -14,7 +14,7 @@ class ISM_News_IndexController extends Mage_Core_Controller_Front_Action {
             $this->loadLayout();
             $this->renderLayout();
         } else {
-            $this->_redirect('no-route');
+            $this->_redirect('*/index/view/');
         }
     }
 

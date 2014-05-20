@@ -41,6 +41,14 @@
                 <div class="input-box">
                     <input type="text" name="email" id="email" value="<?php echo $this->escapeHtml($this->getCustomer()->getEmail()) ?>" title="<?php echo $this->__('Email Address') ?>" class="input-text required-entry validate-email" />
                 </div>
+                <?php $ss = $this->getCustomer()?>
+            </li>
+            <br> 
+            <li>
+                <label for="newstoremembers"><?php echo $this->__('Newstore members number') ?></label>
+                <div class="input-box">
+                    <input type="text" name="member_number" id="newstoremember" value="<?php echo $this->escapeHtml($this->getCustomer()->getMemberNumber()) ?>" title="<?php echo $this->__('Member Number') ?>" class="input-text required-entry validate-email" />
+                </div>
             </li>
             <?php $_dob = $this->getLayout()->createBlock('customer/widget_dob') ?>
             <?php if ($_dob->isEnabled()): ?>
