@@ -2,19 +2,19 @@
 /**
  * Add member_number attribute for customer.
  */
-$this->startSetup();
+/*$this->startSetup();
 $this->getConnection()
         ->addColumn(
                 'customer_entity', 'member_number', array(
-    'type' => 'text', /* input type */
-    'label' => 'Member number', /* Label for the user to read */
-    'input' => 'text', /* input type */
-    'visible' => TRUE, /* users can see it */
-    'required' => FALSE, /* is it required, self-explanatory */
-    'default_value' => 'default', /* default value */
+    'type' => 'text', 
+    'label' => 'Member number', 
+    'input' => 'text', 
+    'visible' => TRUE, 
+    'required' => FALSE,
+    'default_value' => 'default', 
         )
 );
-/*$this->run("
+$this->run("
 -- DROP TABLE IF EXISTS {$this->getTable('newstoremembers')};
 CREATE TABLE {$this->getTable('newstoremembers')} (
 `member_id` int(11) unsigned NOT NULL auto_increment,

@@ -138,6 +138,12 @@ $orderStoreDate = $this->formatDate($_order->getCreatedAtStoreDate(), 'medium', 
                             <td class="value"><strong><?php echo $_groupName ?></strong></td>
                         </tr>
                     <?php endif; ?>
+                    <?php if ($_memberNumber = Mage::helper('ism_newstoremembers')->getMemberNumber($_order->getCustomerName())) : ?>
+                        <tr>
+                            <td class="label"><label><?php echo Mage::helper('sales')->__('Member Number') ?></label></td>
+                            <td class="value"><strong><?php echo $_memberNumber ?></strong></td>
+                        </tr>
+                    <?php endif; ?>
                     <?php foreach ($this->getCustomerAccountData() as $data): ?>
                         <tr>
                             <td class="label"><label><?php echo $data['label'] ?></label></td>
@@ -177,7 +183,7 @@ $orderStoreDate = $this->formatDate($_order->getCreatedAtStoreDate(), 'medium', 
         </div>
     </div>
 
-        <?php if (Mage::helper('ism_deliveryat')->getOrderValue('deliverydate', $_order->getId()) != NULL): ?>
+    <?php if (Mage::helper('ism_deliveryat')->getOrderValue('deliverydate', $_order->getId()) != NULL): ?>
         <div class="clear"></div>
         <div class="box-left">
             <div class="entry-edit">
