@@ -11,7 +11,15 @@ class ISM_NewstoreMembers_Block_Adminhtml_Newstoremembers_Grid extends Mage_Admi
     }
 
     protected function _prepareCollection() {
-        $collection = Mage::getModel('ism_newstoremembers/newstoremembers')->getCollection();
+$collection = Mage::getModel('ism_newstoremembers/newstoremembers')->getCollection();
+        $firstName = Mage::getModel('eav/entity_attribute')->loadByCode('1', 'firstname');
+        $lastName = Mage::getModel('eav/entity_attribute')->loadByCode('1', 'lastname');
+        $collection->getSelect()->join(array('cev1' => 'customer_entity_varchar'), 'cev1.entity_id=main_table.user_id', array('firstname' => 'value'))
+                ->where('cev1.attribute_id=' . $firstName->getAttributeId())
+                ->join(array('cev2' => 'customer_entity_varchar'), 'cev2.entity_id=main_table.user_id', array('lastname' => 'value'))
+                ->where('cev2.attribute_id=' . $lastName->getAttributeId())
+                ->columns(new Zend_Db_Expr("CONCAT(`cev1`.`value`, ' ',`cev2`.`value`) AS fullname"))
+                ->join(array('ce' => 'customer_entity'), 'ce.entity_id=main_table.user_id', array('email' => 'email'));
         $this->setCollection($collection);
         return parent::_prepareCollection();
     }
@@ -23,17 +31,29 @@ class ISM_NewstoreMembers_Block_Adminhtml_Newstoremembers_Grid extends Mage_Admi
             'width' => '50px',
             'index' => 'member_id',
         ));
-        $this->addColumn('member', array(
+        $this->addColumn('fullname', array(
             'header' => Mage::helper('ism_newstoremembers')->__('Member'),
             'align' => 'left',
-            'index' => 'member',
+            'index' => 'fullname',
+        ));
+        $this->addColumn('email', array(
+            'header' => Mage::helper('ism_newstoremembers')->__('email'),
+            'align' => 'left',
+            'index' => 'email',
         ));
         $this->addColumn('member_number', array(
             'header' => Mage::helper('ism_newstoremembers')->__('Member Number'),
             'align' => 'left',
             'index' => 'member_number',
         ));
-
+        $this->addColumn('expire_date', array(
+            'header' => Mage::helper('ism_newstoremembers')->__('Expire date'),
+            'align' => 'left',
+            'width' => '120px',
+            'type' => 'date',
+            'default' => '--',
+            'index' => 'expire_date',
+        ));
         $this->addColumn('status', array(
             'header' => Mage::helper('ism_newstoremembers')->__('In Membersip'),
             'align' => 'left',

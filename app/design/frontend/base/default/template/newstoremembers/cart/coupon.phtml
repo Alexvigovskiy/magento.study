@@ -35,26 +35,49 @@
             </div>
             <div class="buttons-set">
                 <button type="button" title="<?php echo $this->__('Apply Coupon') ?>" class="button" onclick="discountForm.submit(false)" value="<?php echo $this->__('Apply Coupon') ?>"><span><span><?php echo $this->__('Apply Coupon') ?></span></span></button>
-                <?php if(strlen($this->getCouponCode())): ?>
+                <?php if (strlen($this->getCouponCode())): ?>
                     &nbsp; <button type="button" title="<?php echo $this->__('Cancel Coupon') ?>" class="button" onclick="discountForm.submit(true)" value="<?php echo $this->__('Cancel Coupon') ?>"><span><span><?php echo $this->__('Cancel Coupon') ?></span></span></button>
-                <?php endif;?>
+                <?php endif; ?>
             </div>
         </div>
     </div>
 </form>
-
+<form id="discount-coupon-form" action="<?php echo $this->getUrl('newstoremembers/index/cart') ?>" method="post">
+    <div class="discount">
+        <h2><?php echo $this->__('Member confirmation') ?></h2>
+        <div class="discount-form">
+            <?php if ($this->getCustomer()->getGroupId() != '4'): ?>
+                <label for="newstoremembers"><?php echo $this->__('Newstore members number') ?></label>
+                <input type="hidden" name="remove" id="remove-coupone" value="0" />
+                <div class="input-box">
+                    <input type="text" name="member_number" id="member_number" value="" title="<?php echo $this->__('Member Number') ?>" class="input-text required-entry" />
+                </div>
+                <br><p>To be a Newstore Member, you should have a member number, which was sent to you on your email.<br> After enter a code, please click 'Confirm'.</p>
+                <div class="buttons-set">
+                    <button type="submit" title="<?php echo $this->__('Confirm') ?>" class="button"><span><span><?php echo $this->__('Confirm') ?></span></span></button>
+                </div>
+            <?php endif; ?>
+            <?php if ($this->getCustomer()->getGroupId() == '4'): ?>
+                <label for="newstoremembers"><?php echo $this->__('You are member!') ?></label>
+                <div class="input-box">
+                </div>
+                <br><p>This membership allows you to buy a products by members special price(Price indicated for each product separately).</p>
+            <?php endif; ?>
+        </div>
+    </div>
+</form>
 <script type="text/javascript">
 //<![CDATA[
-var discountForm = new VarienForm('discount-coupon-form');
-discountForm.submit = function (isRemove) {
-    if (isRemove) {
-        $('coupon_code').removeClassName('required-entry');
-        $('remove-coupone').value = "1";
-    } else {
-        $('coupon_code').addClassName('required-entry');
-        $('remove-coupone').value = "0";
+    var discountForm = new VarienForm('discount-coupon-form');
+    discountForm.submit = function(isRemove) {
+        if (isRemove) {
+            $('coupon_code').removeClassName('required-entry');
+            $('remove-coupone').value = "1";
+        } else {
+            $('coupon_code').addClassName('required-entry');
+            $('remove-coupone').value = "0";
+        }
+        return VarienForm.prototype.submit.bind(discountForm)();
     }
-    return VarienForm.prototype.submit.bind(discountForm)();
-}
 //]]>
 </script>

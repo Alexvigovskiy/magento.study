@@ -36,24 +36,39 @@ class ISM_NewstoreMembers_Adminhtml_NewstoremembersController extends Mage_Admin
     public function newAction() {
         $this->_forward('edit');
     }
-    
+
     public function saveAction() {
         if ($data = $this->getRequest()->getPost()) {
             $model = Mage::getModel('ism_newstoremembers/newstoremembers');
-            $model->setData($data)->setId($this->getRequest()->getParam('id'));
-            try {
-                $model->save();
-                Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('ism_newstoremembers')->__('Member was successfully saved'));
-                Mage::getSingleton('adminhtml/session')->setFormData(false);
-                if ($this->getRequest()->getParam('back')) {
-                    $this->_redirect('*/*/edit', array('id' => $model->getId()));
+            //Check member number for uniqueness
+            if (Mage::helper('ism_newstoremembers')->isMatch($model, 'member_number', $data['member_number']) == true) {
+                //Check existing customer in memebers
+                if (Mage::helper('ism_newstoremembers')->isMatch($model, 'user_id', $data['user_id']) == true) {
+                    $model->setData($data)->setId($this->getRequest()->getParam('id'));
+                    //Try to save
+                    try {
+                        $model->save();
+                        Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('ism_newstoremembers')->__('Member was successfully saved'));
+                        Mage::getSingleton('adminhtml/session')->setFormData(false);
+                        if ($this->getRequest()->getParam('back')) {
+                            $this->_redirect('*/*/edit', array('id' => $model->getId()));
+                            return;
+                        }
+                        $this->_redirect('*/*/');
+                        return;
+                    } catch (Exception $e) {
+                        Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+                        Mage::getSingleton('adminhtml/session')->setFormData($data);
+                        $this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
+                        return;
+                    }
+                } else {
+                    Mage::getModel('adminhtml/session')->addError(Mage::helper('ism_newstoremembers')->__('Selected customer is already set in Newstore membership.'));
+                    $this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
                     return;
                 }
-                $this->_redirect('*/*/');
-                return;
-            } catch (Exception $e) {
-                Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
-                Mage::getSingleton('adminhtml/session')->setFormData($data);
+            } else {
+                Mage::getModel('adminhtml/session')->addError(Mage::helper('ism_newstoremembers')->__('Entered member number is already exist. Please try again, with new member number.'));
                 $this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
                 return;
             }
@@ -63,15 +78,15 @@ class ISM_NewstoreMembers_Adminhtml_NewstoremembersController extends Mage_Admin
     }
 
     public function deleteAction() {
-            try {
-                $model = Mage::getModel('ism_newstoremembers/newstoremembers');
-                $model->setId($this->getRequest()->getParam('id'))->delete();
-                Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('adminhtml')->__('Member was successfully deleted'));
-                $this->_redirect('*/*/');
-            } catch (Exception $e) {
-                Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
-                $this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
-            }
+        try {
+            $model = Mage::getModel('ism_newstoremembers/newstoremembers');
+            $model->setId($this->getRequest()->getParam('id'))->delete();
+            Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('adminhtml')->__('Member was successfully deleted'));
+            $this->_redirect('*/*/');
+        } catch (Exception $e) {
+            Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+            $this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
+        }
         $this->_redirect('*/*/');
     }
 
