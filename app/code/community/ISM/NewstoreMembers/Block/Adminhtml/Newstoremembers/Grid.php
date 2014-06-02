@@ -11,15 +11,26 @@ class ISM_NewstoreMembers_Block_Adminhtml_Newstoremembers_Grid extends Mage_Admi
     }
 
     protected function _prepareCollection() {
-$collection = Mage::getModel('ism_newstoremembers/newstoremembers')->getCollection();
-        $firstName = Mage::getModel('eav/entity_attribute')->loadByCode('1', 'firstname');
-        $lastName = Mage::getModel('eav/entity_attribute')->loadByCode('1', 'lastname');
-        $collection->getSelect()->join(array('cev1' => 'customer_entity_varchar'), 'cev1.entity_id=main_table.user_id', array('firstname' => 'value'))
+        $collection = Mage::getModel('ism_newstoremembers/newstoremembers')
+                ->getCollection();
+        $firstName = Mage::getModel('eav/entity_attribute')
+                ->loadByCode('1', 'firstname');
+        $lastName = Mage::getModel('eav/entity_attribute')
+                ->loadByCode('1', 'lastname');
+        $collection->getSelect()
+                ->columns(new Zend_Db_Expr("CONCAT(`cev1`.`value`, ' ',"
+                        . "`cev2`.`value`) AS fullname"))
+                ->join(array('cev1' => 'customer_entity_varchar'),
+                        'cev1.entity_id=main_table.user_id', 
+                        array('firstname' => 'value'))
+                ->join(array('cev2' => 'customer_entity_varchar'),
+                        'cev2.entity_id=main_table.user_id',
+                        array('lastname' => 'value'))
+                ->join(array('ce' => 'customer_entity'),
+                        'ce.entity_id=main_table.user_id',
+                        array('email' => 'email'))
                 ->where('cev1.attribute_id=' . $firstName->getAttributeId())
-                ->join(array('cev2' => 'customer_entity_varchar'), 'cev2.entity_id=main_table.user_id', array('lastname' => 'value'))
-                ->where('cev2.attribute_id=' . $lastName->getAttributeId())
-                ->columns(new Zend_Db_Expr("CONCAT(`cev1`.`value`, ' ',`cev2`.`value`) AS fullname"))
-                ->join(array('ce' => 'customer_entity'), 'ce.entity_id=main_table.user_id', array('email' => 'email'));
+                ->where('cev2.attribute_id=' . $lastName->getAttributeId());
         $this->setCollection($collection);
         return parent::_prepareCollection();
     }

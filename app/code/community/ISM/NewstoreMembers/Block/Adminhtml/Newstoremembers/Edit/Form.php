@@ -5,7 +5,8 @@ class ISM_NewstoreMembers_Block_Adminhtml_Newstoremembers_Edit_Form extends Mage
     protected function _prepareForm() {
         $form = new Varien_Data_Form(array(
             'id' => 'edit_form',
-            'action' => $this->getUrl('*/*/save', array('id' => $this->getRequest()->getParam('id'))),
+            'action' => $this->getUrl('*/*/save',
+                    array('id' => $this->getRequest()->getParam('id'))),
             'method' => 'post',
             'enctype' => 'multipart/form-data')
         );
